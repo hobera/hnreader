@@ -83,4 +83,22 @@ public class ItemRepository implements ItemDataSource  {
             }
         });
     }
+
+    @Override
+    public void getCommentList(Item item, @NonNull GetItemListCallback callback) {
+        checkNotNull(item);
+        checkNotNull(callback);
+
+        mItemDataSource.getCommentList(item, new GetItemListCallback() {
+            @Override
+            public void onItemListLoaded(ArrayList<Item> itemList) {
+                callback.onItemListLoaded(itemList);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
+    }
 }

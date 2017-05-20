@@ -29,4 +29,5 @@ public interface ItemDataSource {
 
     void getItem(@NonNull long itemId, @NonNull GetItemCallback callback);
 
+    void getCommentList(Item item, @NonNull GetItemListCallback callback);
 }
