@@ -20,6 +20,8 @@ public interface TopStoriesContract {
 
         void showNoTopStoryList();
 
+        void showUpdatedItem(int rank, Item item);
+
         void showLoadingError();
     }
 
@@ -27,5 +29,7 @@ public interface TopStoriesContract {
         void onActivityResult(int requestCode, int resultCode);
 
         void loadTopStories();
+
+        void loadItem(@NonNull long itemId);
     }
 }

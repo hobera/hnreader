@@ -2,4 +2,13 @@
     <string name="app_name">HN Reader</string>
     <string name="no_stories">No news loaded! Swipe down to load</string>
     <string name="loading" translatable="false" tools:ignore="TypographyEllipsis">...</string>
+    <string name="story_detail" formatted="false">%d points by %s %s | %s</string>
+    <string name="comment">comment</string>
+    <string name="comments">comments</string>
+    <string name="time">%s ago</string>
+    <string name="year">y</string>
+    <string name="week">w</string>
+    <string name="day">d</string>
+    <string name="hour">h</string>
+    <string name="minute">mins</string>
 </resources>

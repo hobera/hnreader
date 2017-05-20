@@ -97,6 +97,11 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     }
 
     @Override
+    public void showUpdatedItem(int rank, Item item) {
+
+    }
+
+    @Override
     public void showLoadingError() {
 
     }

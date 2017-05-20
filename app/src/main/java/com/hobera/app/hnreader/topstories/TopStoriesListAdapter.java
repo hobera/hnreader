@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.hobera.app.hnreader.R;
 import com.hobera.app.hnreader.data.Item;
+import com.hobera.app.hnreader.util.AppUtils;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,15 @@ public class TopStoriesListAdapter extends RecyclerView.Adapter<TopStoriesListAd
     private ArrayList<Item> mItemList;
     private Context mContext;
 
+    public TopStoriesListAdapter(ArrayList<Item> mItemList, Context mContext) {
+        this.mItemList = mItemList;
+        this.mContext = mContext;
+    }
+
+    private Context getContext() {
+        return mContext;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(View itemView, int position);
     }
@@ -37,6 +47,11 @@ public class TopStoriesListAdapter extends RecyclerView.Adapter<TopStoriesListAd
 
     public void setList(ArrayList<Item> itemList) {
         mItemList = checkNotNull(itemList);
+    }
+
+    public void replaceData(ArrayList<Item> itemList) {
+        setList(itemList);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -79,11 +94,39 @@ public class TopStoriesListAdapter extends RecyclerView.Adapter<TopStoriesListAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        TextView txtRank = holder.item_rank;
+        TextView txtTitle = holder.item_title;
+        TextView txtScore = holder.item_score;
+        String rank = String.format("%d.",position+1);
+        String title = "...";
+        String score = "...";
+
+        if (!mItemList.isEmpty()) {
+            Item story = mItemList.get(position);
+
+            if (story != null) {
+                if (story.getTime()!=0) {
+                    title = story.getTitle();
+                    score = AppUtils.getDisplayMetaData(getContext(), story.getScore(),
+                            story.getBy(), story.getTime(), story.getKids());
+                } else {
+                    long itemId = story.getId();
+                    mPresenter.loadItem(itemId);
+                }
+            }
+        }
+        txtRank.setText(rank);
+        txtTitle.setText(title);
+        txtScore.setText(score);
 
     }
 
     @Override
     public int getItemCount() {
         return mItemList.size();
+    }
+
+    public void updateItem(int position, Item item) {
+        mItemList.set(position, item);
     }
 }
