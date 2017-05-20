@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.hobera.app.hnreader.R;
+import com.hobera.app.hnreader.comments.CommentsActivity;
 import com.hobera.app.hnreader.data.Item;
 
 import java.util.ArrayList;
@@ -116,7 +117,7 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
             public void onItemClick(View itemView, int position) {
                 Item story = itemList.get(position);
                 if (story!=null) {
-                    // TODO: open comments
+                    mPresenter.openItemComments(story);
                 }
             }
         });
@@ -150,5 +151,12 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     public void showLoadingError() {
         showList(false);
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void showItemComments(Item item) {
+        Intent intent = new Intent(getContext(), CommentsActivity.class);
+        intent.putExtra(CommentsActivity.EXTRA_ITEM_COMMENT, item);
+        startActivity(intent);
     }
 }

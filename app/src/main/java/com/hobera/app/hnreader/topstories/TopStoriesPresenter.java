@@ -61,6 +61,8 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
                 mTopStoriesView.showLoadingError();
             }
         });
+
+        mFirstLoad = false;
     }
 
     @Override
@@ -77,5 +79,11 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
                 Timber.d("item %d not Loaded ", itemId);
             }
         });
+    }
+
+    @Override
+    public void openItemComments(@NonNull Item item) {
+        checkNotNull(item);
+        mTopStoriesView.showItemComments(item);
     }
 }
