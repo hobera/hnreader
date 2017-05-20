@@ -42,6 +42,17 @@ public final class Item implements Parcelable {
 
     private int mRank;
 
+    public Item(@NonNull long id, int mRank, String type) {
+        this(id, mRank, type, "");
+    }
+
+    public Item(@NonNull long id, int mRank, String type, String parent) {
+        this.id = id;
+        this.mRank = mRank;
+        this.type = type;
+        this.parent = parent;
+    }
+
     public Item(@NonNull long id, int mRank, String by, int descendants, long[] kids,
                 int score, long time, String title, String type, String url, String parent,
                 String text, boolean deleted) {

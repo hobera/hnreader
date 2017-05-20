@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,8 @@ import com.hobera.app.hnreader.R;
 import com.hobera.app.hnreader.data.Item;
 
 import java.util.ArrayList;
+
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
  * Created by Hernan Obera on 5/20/2017.
@@ -29,6 +33,8 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     private LinearLayout mNoStoriesLayout;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private TopStoriesListAdapter mAdapter;
+
     public TopStoriesFragment() {
     }
 
@@ -36,11 +42,18 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
         return new TopStoriesFragment();
     }
 
+    private void showList(boolean bShow){
+        mTopStoriesLayout.setVisibility(bShow ? View.VISIBLE : View.GONE);
+        mNoStoriesLayout.setVisibility(bShow ? View.GONE : View.VISIBLE);
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+
+        mAdapter = new TopStoriesListAdapter(new ArrayList<Item>(0), getContext());
     }
 
     @Override
@@ -51,6 +64,9 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     @Override
     public void onResume() {
         super.onResume();
+        showList(true);
+        mSwipeRefreshLayout.setRefreshing(true);
+        mPresenter.start();
     }
 
     @Override
@@ -83,26 +99,56 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
 
     @Override
     public void setPresenter(TopStoriesContract.Presenter presenter) {
-
+        mPresenter = checkNotNull(presenter);
     }
 
     @Override
-    public void showTopStoryList(ArrayList<Item> itemList) {
+    public void showTopStoryList(final ArrayList<Item> itemList) {
+        mAdapter.replaceData(itemList);
+        mTopStoriesRecycler.setAdapter(mAdapter);
+        mTopStoriesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+        mTopStoriesRecycler.addItemDecoration(itemDecoration);
 
+        mAdapter.setOnItemClickListener(new TopStoriesListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                Item story = itemList.get(position);
+                if (story!=null) {
+                    // TODO: open comments
+                }
+            }
+        });
+
+        mAdapter.setPresenter(mPresenter);
+
+        showList(true);
+
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showNoTopStoryList() {
-
+        showList(false);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void showUpdatedItem(int rank, Item item) {
+    public void showUpdatedItem(final int position, Item item) {
+        mAdapter.updateItem(position, item);
 
+        mTopStoriesRecycler.post(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyItemChanged(position);
+            }
+        });
     }
 
     @Override
     public void showLoadingError() {
-
+        showList(false);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

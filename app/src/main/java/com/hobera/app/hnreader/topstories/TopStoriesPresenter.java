@@ -8,6 +8,8 @@ import com.hobera.app.hnreader.data.source.ItemRepository;
 
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
@@ -53,6 +55,22 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
             @Override
             public void onDataNotAvailable() {
                 mTopStoriesView.showLoadingError();
+            }
+        });
+    }
+
+    @Override
+    public void loadItem(@NonNull final long itemId) {
+        mItemRepository.getItem(itemId, new ItemDataSource.GetItemCallback() {
+            @Override
+            public void onItemLoaded(Item item) {
+                int position = item.getRank()-1;
+                mTopStoriesView.showUpdatedItem(position, item);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                Timber.d("item %d not Loaded ", itemId);
             }
         });
     }
