@@ -1,9 +1,17 @@
 package com.hobera.app.hnreader.topstories;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.hobera.app.hnreader.R;
 import com.hobera.app.hnreader.data.Item;
 
 import java.util.ArrayList;
@@ -13,6 +21,13 @@ import java.util.ArrayList;
  */
 
 public class TopStoriesFragment extends Fragment implements TopStoriesContract.View {
+
+    private TopStoriesContract.Presenter mPresenter;
+
+    private LinearLayout mTopStoriesLayout;
+    private RecyclerView mTopStoriesRecycler;
+    private LinearLayout mNoStoriesLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public TopStoriesFragment() {
     }
@@ -36,6 +51,34 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.onActivityResult(requestCode, resultCode);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+            Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.frag_topstories, container, false);
+
+        mTopStoriesLayout = (LinearLayout) root.findViewById(R.id.topstories_layout);
+        mTopStoriesRecycler = (RecyclerView) root.findViewById(R.id.topstories_recycler);
+
+        mNoStoriesLayout = (LinearLayout) root.findViewById(R.id.no_stories_layout);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.swipe_refresh);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.loadTopStories();
+            }
+        });
+
+        return root;
     }
 
     @Override
