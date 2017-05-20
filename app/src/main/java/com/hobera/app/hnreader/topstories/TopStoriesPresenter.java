@@ -19,8 +19,8 @@ import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 public class TopStoriesPresenter implements TopStoriesContract.Presenter {
 
     private final ItemRepository mItemRepository;
-
     private final TopStoriesContract.View mTopStoriesView;
+    private boolean mFirstLoad = true;
 
     public TopStoriesPresenter(@NonNull ItemRepository mItemRepository,
                                @NonNull TopStoriesContract.View mTopStoriesView) {
@@ -32,7 +32,7 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
 
     @Override
     public void start() {
-        loadTopStories();
+        loadTopStories(false);
     }
 
     @Override
@@ -41,7 +41,11 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
     }
 
     @Override
-    public void loadTopStories() {
+    public void loadTopStories(boolean forceUpdate) {
+        if (forceUpdate || mFirstLoad) {
+            mItemRepository.forceUpdate();
+        }
+
         mItemRepository.getItemList(new ItemDataSource.GetItemListCallback() {
             @Override
             public void onItemListLoaded(ArrayList<Item> topStoriesList) {

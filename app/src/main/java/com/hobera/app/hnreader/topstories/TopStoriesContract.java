@@ -28,7 +28,7 @@ public interface TopStoriesContract {
     interface Presenter extends BasePresenter {
         void onActivityResult(int requestCode, int resultCode);
 
-        void loadTopStories();
+        void loadTopStories(boolean forceUpdate);
 
         void loadItem(@NonNull long itemId);
     }

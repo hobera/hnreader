@@ -90,7 +90,7 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPresenter.loadTopStories();
+                mPresenter.loadTopStories(true);
             }
         });
 
