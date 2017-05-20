@@ -19,6 +19,8 @@ public interface TopStoriesContract {
         void showTopStoryList(ArrayList<Item> itemList);
 
         void showNoTopStoryList();
+
+        void showLoadingError();
     }
 
     interface Presenter extends BasePresenter {

@@ -1,5 +1,7 @@
 package com.hobera.app.hnreader.topstories;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.hobera.app.hnreader.data.Item;
@@ -11,9 +13,34 @@ import java.util.ArrayList;
  */
 
 public class TopStoriesFragment extends Fragment implements TopStoriesContract.View {
+
+    public TopStoriesFragment() {
+    }
+
+    public static TopStoriesFragment newInstance() {
+        return new TopStoriesFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setRetainInstance(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     @Override
     public void setPresenter(TopStoriesContract.Presenter presenter) {
-        
+
     }
 
     @Override
@@ -23,6 +50,11 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
 
     @Override
     public void showNoTopStoryList() {
+
+    }
+
+    @Override
+    public void showLoadingError() {
 
     }
 }
