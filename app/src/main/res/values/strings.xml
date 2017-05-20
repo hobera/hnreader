@@ -3,6 +3,10 @@
     <string name="no_stories">No news loaded! Swipe down to load</string>
     <string name="loading" translatable="false" tools:ignore="TypographyEllipsis">...</string>
     <string name="story_detail" formatted="false">%d points by %s %s | %s</string>
+    <string name="replies">%s reply</string>
+    <string name="no_comments">No comments</string>
+    <string name="show">Show</string>
+    <string name="hide">Hide</string>
     <string name="comment">comment</string>
     <string name="comments">comments</string>
     <string name="time">%s ago</string>
