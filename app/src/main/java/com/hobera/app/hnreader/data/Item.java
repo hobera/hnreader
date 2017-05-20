@@ -1,9 +1,11 @@
 package com.hobera.app.hnreader.data;
 
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
+import android.text.Html;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -145,6 +147,13 @@ public final class Item implements Parcelable {
     }
 
     public String getTitle() {
+        if (title != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                title = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY).toString();
+            } else{
+                title = Html.fromHtml(title).toString();
+            }
+        }
         return title;
     }
 
@@ -162,6 +171,13 @@ public final class Item implements Parcelable {
     }
 
     public String getText() {
+        if (text != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                text = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY).toString();
+            } else{
+                text = Html.fromHtml(text).toString();
+            }
+        }
         return text;
     }
 
