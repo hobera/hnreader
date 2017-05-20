@@ -1,3 +1,7 @@
+plugins {
+    id "me.tatarka.retrolambda" version "3.4.0"
+}
+
 apply plugin: 'com.android.application'
 
 android {
@@ -29,6 +33,10 @@ android {
                 && variant.getFlavors().get(0).name.equals('mock')) {
             variant.setIgnore(true);
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
