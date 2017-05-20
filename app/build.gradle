@@ -19,12 +19,21 @@ android {
     }
 }
 
+ext {
+    espressoVersion = '2.2.2'
+    supportLibraryVersion = '25.3.1'
+    timberVersion = '4.5.1'
+    junitVersion = '4.12'
+}
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
+    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
+
+    compile "com.jakewharton.timber:timber:$timberVersion"
+
+    testCompile "junit:junit:$junitVersion"
 }
