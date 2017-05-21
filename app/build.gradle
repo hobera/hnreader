@@ -47,6 +47,7 @@ ext {
     rxJavaVersion = '2.0.1'
     timberVersion = '4.5.1'
     junitVersion = '4.12'
+    mockitoVersion = '1.10.19'
 }
 
 dependencies {
@@ -65,4 +66,5 @@ dependencies {
     compile "com.jakewharton.timber:timber:$timberVersion"
 
     testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-all:$mockitoVersion"
 }
