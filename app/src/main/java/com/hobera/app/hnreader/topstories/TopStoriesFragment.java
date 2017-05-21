@@ -66,7 +66,6 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     public void onResume() {
         super.onResume();
         showList(true);
-        mSwipeRefreshLayout.setRefreshing(true);
         mPresenter.start();
     }
 
@@ -104,6 +103,20 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     }
 
     @Override
+    public void setLoadingIndicator(boolean active) {
+        if (getView() == null) {
+            return;
+        }
+        // Make sure setRefreshing() is called after the layout is done with everything else.
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(active);
+            }
+        });
+    }
+
+    @Override
     public void showTopStoryList(final ArrayList<Item> itemList) {
         mAdapter.replaceData(itemList);
         mTopStoriesRecycler.setAdapter(mAdapter);
@@ -125,14 +138,11 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
         mAdapter.setPresenter(mPresenter);
 
         showList(true);
-
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showNoTopStoryList() {
         showList(false);
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -150,7 +160,6 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
     @Override
     public void showLoadingError() {
         showList(false);
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -158,5 +167,10 @@ public class TopStoriesFragment extends Fragment implements TopStoriesContract.V
         Intent intent = new Intent(getContext(), CommentsActivity.class);
         intent.putExtra(CommentsActivity.EXTRA_ITEM_COMMENT, item);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
     }
 }

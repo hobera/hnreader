@@ -16,6 +16,8 @@ import java.util.ArrayList;
  */
 public interface TopStoriesContract {
     interface View extends BaseView<Presenter> {
+        void setLoadingIndicator(boolean active);
+
         void showTopStoryList(ArrayList<Item> itemList);
 
         void showNoTopStoryList();
@@ -25,6 +27,8 @@ public interface TopStoriesContract {
         void showLoadingError();
 
         void showItemComments(Item item);
+
+        boolean isActive();
     }
 
     interface Presenter extends BasePresenter {

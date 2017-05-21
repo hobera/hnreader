@@ -42,6 +42,8 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
 
     @Override
     public void loadTopStories(boolean forceUpdate) {
+        mTopStoriesView.setLoadingIndicator(true);
+
         if (forceUpdate || mFirstLoad) {
             mItemRepository.forceUpdate();
         }
@@ -49,15 +51,27 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
         mItemRepository.getItemList(new ItemDataSource.GetItemListCallback() {
             @Override
             public void onItemListLoaded(ArrayList<Item> topStoriesList) {
+                // The view may not be able to handle UI updates anymore
+                if (!mTopStoriesView.isActive()) {
+                    return;
+                }
+
                 if (topStoriesList.isEmpty()) {
                     mTopStoriesView.showNoTopStoryList();
                 } else {
                     mTopStoriesView.showTopStoryList(topStoriesList);
                 }
+
+                mTopStoriesView.setLoadingIndicator(false);
             }
 
             @Override
             public void onDataNotAvailable() {
+                // The view may not be able to handle UI updates anymore
+                if (!mTopStoriesView.isActive()) {
+                    return;
+                }
+
                 mTopStoriesView.showLoadingError();
             }
         });
