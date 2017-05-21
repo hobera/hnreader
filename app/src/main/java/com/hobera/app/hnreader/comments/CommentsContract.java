@@ -26,6 +26,8 @@ public interface CommentsContract {
         void showLoadingError();
 
         void showReply(Item item);
+
+        boolean isActive();
     }
 
     interface Presenter extends BasePresenter {

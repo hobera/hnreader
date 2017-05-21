@@ -138,6 +138,11 @@ public class CommentsFragment extends Fragment implements CommentsContract.View 
         });
     }
 
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
     private void showList(boolean bShow){
         mCommentsLayout.setVisibility(bShow ? View.VISIBLE : View.GONE);
         mNoCommentsLayout.setVisibility(bShow ? View.GONE : View.VISIBLE);
