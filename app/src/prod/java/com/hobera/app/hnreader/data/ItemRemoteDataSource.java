@@ -27,6 +27,7 @@ public class ItemRemoteDataSource implements ItemDataSource {
     private static ItemRemoteDataSource mInstance;
 
     private static final Map<String, Item> ITEM_DATA = new LinkedHashMap<>();
+    private static final Map<String, Item> COMMENT_DATA = new LinkedHashMap<>();
 
     static final String BASE_API_URL = "https://hacker-news.firebaseio.com/v0/";
     private final RestService mRestService;
@@ -72,6 +73,33 @@ public class ItemRemoteDataSource implements ItemDataSource {
         }
     }
 
+    @Override
+    public void getCommentList(Item item, @NonNull GetItemListCallback callback) {
+        COMMENT_DATA.clear();
+
+        if (item == null) {
+            mGetItemListCallback.onDataNotAvailable();
+            return;
+        }
+
+        long[] itemIds = item.getKids();
+
+        if (callback != null) {
+            mGetItemListCallback = callback;
+
+            if (itemIds == null) {
+                mGetItemListCallback.onDataNotAvailable();
+            }
+
+            int rank = 1;
+            for (long itemId : itemIds) {
+                COMMENT_DATA.put(String.valueOf(itemId), new Item(itemId, rank++, Item.COMMENT));
+            }
+
+            mGetItemListCallback.onItemListLoaded(new ArrayList<Item>(COMMENT_DATA.values()));
+        }
+    }
+
     private void onGetItemListResponse(int[] itemIds) {
         if (itemIds == null) {
             mGetItemListCallback.onDataNotAvailable();
@@ -100,6 +128,14 @@ public class ItemRemoteDataSource implements ItemDataSource {
         switch (item.getType()) {
             case Item.STORY:
                 updatedItem = ITEM_DATA.get(String.valueOf(item.getId()));
+                break;
+            case Item.COMMENT:
+                updatedItem = COMMENT_DATA.get(String.valueOf(item.getId()));
+                if (updatedItem==null) {
+                    // reply
+                    updatedItem = new Item(item.getId(), 0, Item.COMMENT);
+                    COMMENT_DATA.put(String.valueOf(item.getId()),item);
+                }
                 break;
             default:
                 break;

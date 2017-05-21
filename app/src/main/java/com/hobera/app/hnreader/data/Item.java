@@ -205,4 +205,5 @@ public final class Item implements Parcelable {
         dest.writeString(text);
         dest.writeInt(deleted ? 1 : 0);
         dest.writeInt(mRank);
-    }}
+    }
+}

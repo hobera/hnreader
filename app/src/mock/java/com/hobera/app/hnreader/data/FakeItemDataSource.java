@@ -18,6 +18,7 @@ public class FakeItemDataSource implements ItemDataSource {
     private static FakeItemDataSource mInstance;
 
     private static final Map<String, Item> ITEM_DATA = new LinkedHashMap<>();
+    private static final Map<String, Item> COMMENT_DATA = new LinkedHashMap<>();
     private static final int RESPONSE_LATENCY_IN_MILLIS = 1000;
 
     public FakeItemDataSource() {
@@ -46,6 +47,17 @@ public class FakeItemDataSource implements ItemDataSource {
         Item updatedItem = ITEM_DATA.get(String.valueOf(itemId));
 
         if (updatedItem == null) {
+            updatedItem = COMMENT_DATA.get(String.valueOf(itemId));
+        }
+
+        if (updatedItem == null) {
+            // reply
+            parent = "200001";
+            updatedItem = new Item(itemId, 0, Item.COMMENT, parent);
+            COMMENT_DATA.put(String.valueOf(itemId),updatedItem);
+        }
+
+        if (updatedItem == null) {
             callback.onDataNotAvailable();
             return;
         }
@@ -56,7 +68,16 @@ public class FakeItemDataSource implements ItemDataSource {
             updatedItem.populate("abc", 2, kids, 50, timeMillis,
                     String.format("Story %d &quot;This is a title for a story&quot;", itemId)
                     ,"story", "https://news.ycombinator.com",  parent, "", false);
+        } else if (updatedItem.getType() == Item.COMMENT) {
+            long[] kids = {100003};
+            long timeMillis = (System.currentTimeMillis()-3600000)/1000; // 1h ago
+            updatedItem.populate("def", 1, kids, 50, timeMillis,
+                    "","comment", "", parent,
+                    String.format(
+                            "Comment %d &quot;Show me your comments and hide your replies&quot;", itemId),
+                    false);
         }
+
 
         final Item finalUpdatedItem = updatedItem;
         new Handler().postDelayed(new Runnable() {
@@ -65,5 +86,24 @@ public class FakeItemDataSource implements ItemDataSource {
                 callback.onItemLoaded(finalUpdatedItem);
             }
         }, RESPONSE_LATENCY_IN_MILLIS);
+    }
+
+    @Override
+    public void getCommentList(Item item, @NonNull GetItemListCallback callback) {
+        COMMENT_DATA.clear();
+
+        if (item == null) {
+            callback.onDataNotAvailable();
+            return;
+        }
+
+        long[] itemIds = item.getKids();
+
+        int rank = 1;
+        for (long itemId : itemIds) {
+            COMMENT_DATA.put(String.valueOf(itemId), new Item(itemId, rank++, Item.COMMENT));
+        }
+
+        callback.onItemListLoaded(new ArrayList<Item>(COMMENT_DATA.values()));
     }
 }
