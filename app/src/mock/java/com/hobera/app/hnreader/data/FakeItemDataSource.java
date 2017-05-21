@@ -35,7 +35,7 @@ public class FakeItemDataSource implements ItemDataSource {
     public void getItemList(@NonNull GetItemListCallback callback) {
         for (int i=0; i<500; i++) {
             long itemId = 1234570+i;
-            ITEM_DATA.put(String.valueOf(itemId), new Item(itemId, i+1, Item.STORY));
+            ITEM_DATA.put(String.valueOf(itemId), new Item(itemId, i, Item.STORY));
         }
 
         callback.onItemListLoaded(new ArrayList<Item>(ITEM_DATA.values()));
@@ -99,7 +99,7 @@ public class FakeItemDataSource implements ItemDataSource {
 
         long[] itemIds = item.getKids();
 
-        int rank = 1;
+        int rank = 0;
         for (long itemId : itemIds) {
             COMMENT_DATA.put(String.valueOf(itemId), new Item(itemId, rank++, Item.COMMENT));
         }

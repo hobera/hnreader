@@ -70,8 +70,7 @@ public class TopStoriesPresenter implements TopStoriesContract.Presenter {
         mItemRepository.getItem(itemId, new ItemDataSource.GetItemCallback() {
             @Override
             public void onItemLoaded(Item item) {
-                int position = item.getRank()-1;
-                mTopStoriesView.showUpdatedItem(position, item);
+                mTopStoriesView.showUpdatedItem(item.getRank(), item);
             }
 
             @Override

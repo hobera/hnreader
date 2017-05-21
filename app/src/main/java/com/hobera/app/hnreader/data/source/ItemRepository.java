@@ -52,7 +52,7 @@ public class ItemRepository implements ItemDataSource  {
                 }
                 CACHED_DATA.clear();
                 for (Item item : itemList) {
-                    CACHED_DATA.put(String.valueOf(item.getRank()-1), item);
+                    CACHED_DATA.put(String.valueOf(item.getRank()), item);
                 }
                 mForceUpdate = false;
 

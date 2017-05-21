@@ -91,7 +91,7 @@ public class ItemRemoteDataSource implements ItemDataSource {
                 mGetItemListCallback.onDataNotAvailable();
             }
 
-            int rank = 1;
+            int rank = 0;
             for (long itemId : itemIds) {
                 COMMENT_DATA.put(String.valueOf(itemId), new Item(itemId, rank++, Item.COMMENT));
             }
@@ -105,7 +105,7 @@ public class ItemRemoteDataSource implements ItemDataSource {
             mGetItemListCallback.onDataNotAvailable();
         }
 
-        int rank = 1;
+        int rank = 0;
         for (int id : itemIds) {
             ITEM_DATA.put(String.valueOf(id), new Item(id, rank++, Item.STORY));
         }

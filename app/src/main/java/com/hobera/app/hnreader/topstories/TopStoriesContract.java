@@ -20,7 +20,7 @@ public interface TopStoriesContract {
 
         void showNoTopStoryList();
 
-        void showUpdatedItem(int rank, Item item);
+        void showUpdatedItem(int position, Item item);
 
         void showLoadingError();
 

@@ -65,8 +65,7 @@ public class CommentsPresenter implements CommentsContract.Presenter {
         mItemRepository.getItem(commentId, new ItemDataSource.GetItemCallback() {
             @Override
             public void onItemLoaded(Item item) {
-                int position = item.getRank()-1;
-                mCommentsView.showUpdatedComment(position, item);
+                mCommentsView.showUpdatedComment(item.getRank(), item);
             }
 
             @Override
