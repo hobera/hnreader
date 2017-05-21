@@ -101,4 +101,8 @@ public class ItemRepository implements ItemDataSource  {
             }
         });
     }
+
+    public static void destroyInstance() {
+        mInstance = null;
+    }
 }

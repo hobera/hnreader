@@ -2,6 +2,7 @@ package com.hobera.app.hnreader.data;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.hobera.app.hnreader.data.source.ItemDataSource;
 
@@ -105,5 +106,19 @@ public class FakeItemDataSource implements ItemDataSource {
         }
 
         callback.onItemListLoaded(new ArrayList<Item>(COMMENT_DATA.values()));
+    }
+
+    @VisibleForTesting
+    public void addItems(Item... items) {
+        for (Item item : items) {
+            ITEM_DATA.put(String.valueOf(item.getId()), item);
+        }
+    }
+
+    @VisibleForTesting
+    public void addComments(Item... items) {
+        for (Item item : items) {
+            COMMENT_DATA.put(String.valueOf(item.getId()), item);
+        }
     }
 }
