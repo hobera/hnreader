@@ -1,8 +1,23 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 plugins {
     id "me.tatarka.retrolambda" version "3.4.0"
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 25
@@ -16,7 +31,16 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            // disable crashlytics when debugging
+            buildConfigField "boolean", "USE_CRASHLYTICS", "false"
+            ext.enableCrashlytics = false
+        }
         release {
+            // enable crashlytics where you need
+            buildConfigField "boolean", "USE_CRASHLYTICS", "true"
+            ext.enableCrashlytics = true
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -48,6 +72,7 @@ ext {
     timberVersion = '4.5.1'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'
+    crashlyticsVersion = '2.6.8'
 }
 
 dependencies {
@@ -64,6 +89,10 @@ dependencies {
     compile "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
 
     compile "com.jakewharton.timber:timber:$timberVersion"
+
+    compile("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion@aar") {
+        transitive = true;
+    }
 
     testCompile "junit:junit:$junitVersion"
     testCompile "org.mockito:mockito-all:$mockitoVersion"
