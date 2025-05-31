@@ -1,54 +1,43 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
-plugins {
-    id "me.tatarka.retrolambda" version "3.4.0"
-}
-
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
+    // maven { url 'https://maven.fabric.io/public' } // Removed Fabric repository
 }
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    namespace "com.hobera.app.hnreader"
+    compileSdkVersion 33
     defaultConfig {
         applicationId "com.hobera.app.hnreader"
         minSdkVersion 9
-        targetSdkVersion 25
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
-            // disable crashlytics when debugging
-            buildConfigField "boolean", "USE_CRASHLYTICS", "false"
-            ext.enableCrashlytics = false
+            // Crashlytics related fields removed
         }
         release {
-            // enable crashlytics where you need
-            buildConfigField "boolean", "USE_CRASHLYTICS", "true"
-            ext.enableCrashlytics = true
-
+            // Crashlytics related fields removed
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        buildConfig true
+    }
+    flavorDimensions "version"
     productFlavors {
         prod {
+            dimension "version"
         }
         mock {
+            dimension "version"
             applicationIdSuffix = ".mock"
         }
     }
@@ -65,35 +54,44 @@ android {
 }
 
 ext {
-    espressoVersion = '2.2.2'
-    supportLibraryVersion = '25.3.1'
-    retrofitVersion = '2.2.0'
-    rxJavaVersion = '2.0.1'
-    timberVersion = '4.5.1'
-    junitVersion = '4.12'
-    mockitoVersion = '1.10.19'
-    crashlyticsVersion = '2.6.8'
+    // AndroidX versions from previous step, will update some
+    androidxVersion = '1.6.1' // Updated for appcompat
+    recyclerViewVersion = '1.3.1' // Specific for recyclerview
+    materialVersion = '1.9.0' // Updated
+    androidxTestEspressoVersion = '3.5.1' // Updated
+
+    // Library specific versions
+    retrofitVersion = '2.9.0' // Updated
+    rxAndroidVersion = '2.1.1' // Updated (rxJavaVersion was a typo, it's for rxandroid)
+    timberVersion = '5.0.1' // Updated
+    junitVersion = '4.13.2' // Updated
+    mockitoCoreVersion = '5.3.1' // New, for mockito-core
+
+    // Firebase
+    firebaseCrashlyticsKtxVersion = '18.4.3'
+    firebaseAnalyticsKtxVersion = '21.3.0'
+    // crashlyticsVersion was for Fabric, can be removed or ignored
 }
 
 dependencies {
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile "com.android.support:appcompat-v7:$supportLibraryVersion"
-    compile "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    compile "com.android.support:design:$supportLibraryVersion"
+    androidTestImplementation("androidx.test.espresso:espresso-core:$androidxTestEspressoVersion")
+    // Removed exclusion as Jetifier should handle support-annotations or it's no longer an issue with androidxTestEspressoVersion
 
-    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-    compile "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
+    implementation "androidx.appcompat:appcompat:$androidxVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion" // Use specific version
+    implementation "com.google.android.material:material:$materialVersion"
 
-    compile "com.jakewharton.timber:timber:$timberVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion" // RxJava2 adapter for Retrofit
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion" // RxAndroid
 
-    compile("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion@aar") {
-        transitive = true;
-    }
+    implementation "com.jakewharton.timber:timber:$timberVersion"
 
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.mockito:mockito-all:$mockitoVersion"
+    // Firebase Crashlytics and Analytics
+    implementation "com.google.firebase:firebase-crashlytics-ktx:$firebaseCrashlyticsKtxVersion"
+    implementation "com.google.firebase:firebase-analytics-ktx:$firebaseAnalyticsKtxVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoCoreVersion" // Replaced mockito-all
 }
