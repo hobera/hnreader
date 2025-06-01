@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".topstories.TopStoriesActivity"
-                  android:configChanges="orientation|keyboardHidden|screenSize">
+                  android:configChanges="orientation|keyboardHidden|screenSize"
+                  android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -19,7 +20,8 @@
         </activity>
         <activity android:name=".comments.CommentsActivity"
                   android:theme="@style/AppTheme.NoActionBar"
-                  android:configChanges="orientation|keyboardHidden|screenSize"/>
+                  android:configChanges="orientation|keyboardHidden|screenSize"
+                  android:exported="false"/>
     </application>
 
 </manifest>
